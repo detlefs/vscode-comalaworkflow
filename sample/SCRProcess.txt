@@ -1,0 +1,100 @@
+﻿{workflow:name=Across SCR Process|label=scr}
+    {description}
+        Covers the whole process of Across software change requests (SCRs)
+    {description}
+    {comment}
+        Version 1.0.0	- Initial working version
+        Version 1.0.1	- Added Assignees to triggers
+        Version 1.0.2	- Set label= for the workflow. Only pages with this label get the workflow assigned
+        Version 1.0.3   - Fixed user name of Sergey; Changed client to customer; Changed New SCR to In preparation
+        Version 1.0.4   - Added standin users meberhardt and dschneider for SCR Master Verification approval
+        Version 1.0.5   - Added notification email on task expiry. Task expiry is configured for: Delivery->Accepted
+                          New task Delivery -> Acceptance tracked
+	{comment}
+    {trigger:statechanged|state=SCR Master Verification}
+        {set-metadata:Document Author}@user@{set-metadata}
+        {send-email:user=sdiessner,meberhardt|subject=Status SCR Master Verification reached}
+        Please check for correct SCR page: @page@!
+        {send-email}
+    {trigger}
+    {trigger:statechanged|state=Specification Documentation}
+        {send-email:user=@Document Author@|subject=Status Specification Documentation reached}
+        Please start the specification creation: @page@!
+        {send-email}
+    {trigger}
+    {trigger:statechanged|state=In preparation}
+        {send-email:user=@Document Author@|subject=Status In preparation reached}
+        Please verify the feedback and re-submit if corrected: @page@!
+        {send-email}
+    {trigger}
+    {trigger:statechanged|state=Offer}
+        {send-email:user=@Document Author@|subject=Status Offer reached}
+        Please continue with the offering process: @page@!
+        {send-email}
+    {trigger}
+    {trigger:statechanged|state=Delivery}
+        {send-email:user=@Document Author@|subject=Status Delivery reached}
+        Please start with the delivery process: @page@!
+        {send-email}
+    {trigger}
+    {trigger:statechanged|state=Invoice}
+        {send-email:user=@Document Author@|subject=Status Invoice reached}
+        Please start with the invoicing process: @page@!
+        {send-email}
+    {trigger}
+    {trigger:taskexpired}
+        {send-email:user=@Document Author@,sdiessner|subject=Task expired: @state@: @taskname@}
+        Please make sure the expired task (@state@: @taskname@) is correctly processed: @page@!
+        {send-email}
+    {trigger}
+    {state:In preparation|submit=SCR Master Verification|description="Please fill out the form as complete as possibe befor starting the next step"}
+    {state}
+    {state:SCR Master Verification|approved=Specification Documentation|rejected=In preparation|description=The SCR master verifies, if the SCR meets our requrements.}
+        {approval:Meets requirements|user=sdiessner,meberhardt,dschneider}
+    {state}
+    {state:Specification Documentation|completed=Specification Verification}
+        {task:name=Specification Writing}
+        {task:name=Specification Translation}
+        {task:name=Solution Naming}
+    {state}
+    {state:Specification Verification|approved=DEV Effort Estimation|rejected=Specification Documentation}
+        {approval:Spec meets requirements|user=dschneider,sstahl}
+    {state}
+    {state:DEV Effort Estimation|completed=QA & DOC Effort Estimation}
+        {task:name=DEV Estimated|assignee=sdubrovskiy}
+    {state}
+    {state:QA & DOC Effort Estimation|completed=Offer}
+        {task:name=QA Estimated|assignee=dschneider}
+        {task:name=DOC Estimated|assignee=sstahl}
+    {state}
+    {state:Offer|completed=Implementation DEV}
+        {state-selection:states=Rejected,In preparation}
+        {task:name=Offer sent}
+        {task:name=Specification sent}
+        {task:name=Order signed|note=The customer has formally signed the order}
+        {task:name=Spec signed|note=The customer has formally signed the spec}
+    {state}
+    {state:Rejected|submit=Completed|expired=Completed|duedate=P2W}
+    {state}
+    {state:Implementation DEV|completed=Implementation DOC & QA}
+        {task:name=DEV done|assignee=sdubrovskiy}
+        {task:name=Internal DOC done|assignee=sdubrovskiy}
+    {state}
+    {state:Implementation DOC & QA|completed=QA Result}
+        {task:name=External DOC done|assignee=sstahl}
+        {task:name=QA done|assignee=dschneider}
+    {state}
+    {state:QA Result|taskable=true}
+        {state-selection:states=Implementation DEV, Implementation DOC & QA,Delivery|user=dschneider}
+    {state}
+    {state:Delivery|completed=Invoice}
+        {state-selection:states=Implementation DEV,Implementation DOC & QA}
+        {task:name=Delivered|note=Delivery to customer completed}
+        {task:name=Customer Accepted|note=Customer formally accepted the delivery|duedate=P6W}
+        {task:name=Acceptance tracked|note=Formal customer acceptance of the delivery was tracked in CRM}
+    {state}
+    {state:Invoice|submit=Completed}
+    {state}
+    {state:Completed|final=true|hideselection=true}
+    {state}
+{workflow}

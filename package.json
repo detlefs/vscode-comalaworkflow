@@ -1,41 +1,43 @@
 {
-    "name": "marko",
-    "displayName": "Marko Syntax Highlighting",
-    "description": "Syntax highlighting for Marko templates. Not sure what Marko is? Check out markojs.com for more info! Special thanks to https://github.com/merwan7 for creating the sublime originals!",
-    "version": "0.2.0",
-    "publisher": "pcanella",
+    "name": "comalaworkflow",
+    "displayName": "Comala Workflow Syntax Highlighting",
+    "description": "Syntax highlighting for Comala Workflows. Not sure what Comala is? Check out http://www.comalatech.com/products/comalaWorkflows for more info!",
+    "version": "0.1.0.0",
+    "publisher": "dschneider",
     "engines": {
         "vscode": "^0.10.10"
     },
-    "icon": "images/marko.png",
+    "icon": "images/comalaworkflow.png",
     "categories": [
         "Languages"
     ],
     "contributes": {
         "languages": [
             {
-                "id": "marko",
+                "id": "comalaworkflow",
                 "aliases": [
-                    "Marko",
-                    "marko"
+                    "ComalaWorkflow"
                 ],
                 "extensions": [
-                    ".marko"
+                    ".comala",
+                    ".workflow",
+                    ".comalaworkflow",
+                    ".cwf"
                 ],
-                "configuration": "./marko.configuration.json"
+                "configuration": "./comalaworkflow.configuration.json"
             }
         ],
         "grammars": [
             {
-                "language": "marko",
-                "scopeName": "text.marko",
-                "path": "./syntaxes/marko.tmLanguage"
+                "language": "comalaworkflow",
+                "scopeName": "text.comalaworkflow",
+                "path": "./syntaxes/comalaworkflow.tmLanguage"
             }
         ],
         "snippets": [
             {
-                "language": "marko",
-                "path": "./snippets/marko.json"
+                "language": "comalaworkflow",
+                "path": "./snippets/comalaworkflow.json"
             }
         ]
     }
