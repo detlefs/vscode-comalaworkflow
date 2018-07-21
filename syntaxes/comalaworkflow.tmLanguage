@@ -4,10 +4,10 @@
 <dict>
 	<key>fileTypes</key>
 	<array>
-		<string>marko</string>
+		<string>comalaworkflow</string>
 	</array>
 	<key>name</key>
-	<string>Marko</string>
+	<string>Comala Workflow</string>
 	<key>patterns</key>
 	<array>
 		<dict>
